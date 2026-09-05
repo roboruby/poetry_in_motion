@@ -25,8 +25,8 @@ module MessagesHelper
   # The short outcome of a tool result row.
   def tool_result_label(message)
     name = message.parent_tool_call&.name.to_s
-    result = JSON.parse(message.content.to_s) rescue nil
-    return "#{name.humanize} answered" unless result.is_a?(Hash)
+    result = parse_result(message)
+    return "#{name.humanize} answered" unless result
     return "#{name.humanize} failed: #{result["error"]}" if result["error"]
 
     if result.key?("ok")
@@ -35,14 +35,20 @@ module MessagesHelper
       "#{pluralize(result["returned"], "row")}#{" of #{result["total_matches"]}" if result["total_matches"]}"
     elsif result["rows"]
       pluralize(Array(result["rows"]).size, "group")
+    elsif result.key?("total")
+      "One total"
+    elsif name == "bank_overview"
+      "Bank totals loaded"
+    elsif name == "customer_profile"
+      "Profile loaded"
     else
       "Done"
     end
   end
 
   def tool_result_failed?(message)
-    result = JSON.parse(message.content.to_s) rescue nil
-    result.is_a?(Hash) && (result["error"].present? || result["ok"] == false)
+    result = parse_result(message)
+    result.present? && (result["error"].present? || result["ok"] == false)
   end
 
   # "[ui action] view_transactions on customer-x: {...}" => "View transactions"
@@ -50,5 +56,14 @@ module MessagesHelper
     body = message.content.to_s.delete_prefix(Message::ACTION_PREFIX).strip
     name = body.split(" on ", 2).first.to_s
     name.humanize.presence || "Action"
+  end
+
+  private
+
+  def parse_result(message)
+    result = JSON.parse(message.content.to_s)
+    result.is_a?(Hash) ? result : nil
+  rescue JSON::ParserError
+    nil
   end
 end

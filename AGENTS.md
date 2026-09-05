@@ -1,3 +1,45 @@
+# AGENTS.md — poetry_in_motion
+
+The reference app for Poetry's RubyLLM installer: a bank operations analyst
+(RubyLLM over OpenRouter) whose answers become Poetry surfaces on a workspace.
+README.md explains the architecture; this file carries the rules.
+
+## Shape
+
+- `Chat` is a workspace. Surfaces live only as the A2UI message log in
+  `ui_events`, replayed through `Chat#surface_session` (poetry-agent's
+  `Poetry::Agent::A2UI::Session` with `Workspace::Catalog`). Never store
+  surface HTML; never mutate a surface without an event.
+- The component vocabulary is declared once in `Workspace::Vocabulary`
+  (prompt text + tool JSON schema) and rendered by `Workspace::Catalog`.
+  Adding a component means all three: a vocabulary entry, a `render_<name>`
+  method that renders a Poetry component, and a catalog test.
+- `Workspace::Composer` is the only writer of `ui_events` and the only
+  caller of the tile streams; tools and controllers go through it.
+- Chat rows: appended at version 0 on create, morphed by `vreplace` with a
+  rising version while streaming, settled at `Streamer::SETTLED_VERSION`.
+  RubyLLM creates every row (tool results included) as an empty assistant
+  placeholder first; the settled render fixes the role, so a row appended
+  with the maximum version would never update. Keep that contract.
+- Dataset models are read-only (`DatasetRecord`); the data is copied by
+  `bin/rails banking:setup`, never committed.
+
+## Gates
+
+- `bin/rails test` (fixtures only; no dataset, no network) and `bin/ci`
+  (RuboCop omakase, Brakeman with `config/brakeman.ignore`, audits).
+- Live turns need `OPENROUTER_API_KEY` in `.env`; tests set a dummy key.
+
+## Conventions
+
+- Tools return JSON strings; `{ "error": ... }` is the recoverable failure
+  the model can act on. Cap rows (`ApplicationTool::MAX_LIMIT`).
+- Compose UI with `poetry_*` helpers and Poetry component classes; the only
+  raw markup is layout wrappers (grid, tile chrome).
+- Prose for the user, not for the model, goes in views; anything the model
+  reads lives in `app/prompts/analyst/instructions.txt.erb` or a tool
+  description.
+
 <!-- poetry:agents:begin -->
 ## Building UI with poetry (88 components + 13 chart components + 8 blocks)
 

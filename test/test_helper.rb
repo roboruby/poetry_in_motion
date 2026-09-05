@@ -1,6 +1,4 @@
 ENV["RAILS_ENV"] ||= "test"
-# RubyLLM builds the provider when a chat is prepared; tests never reach the network.
-ENV["OPENROUTER_API_KEY"] ||= "test-key"
 require_relative "../config/environment"
 require "rails/test_help"
 

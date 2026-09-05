@@ -19,7 +19,7 @@ module MessagesHelper
     when "render_surface", "update_surface", "remove_surface" then arguments["title"] || arguments["surface_id"]
     else ARGUMENT_HINTS.filter_map { |key| arguments[key] }.first
     end
-    hint.present? ? "#{label} · #{hint}" : label
+    hint.present? ? "#{label} · #{CGI.unescapeHTML(hint.to_s)}" : label
   end
 
   # The short outcome of a tool result row.

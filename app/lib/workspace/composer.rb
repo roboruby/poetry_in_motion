@@ -39,7 +39,7 @@ module Workspace
       messages << { "createSurface" => { "surfaceId" => surface_id, "catalogId" => Catalog::ID,
                                          "sendDataModel" => true, "dataModel" => data.is_a?(Hash) ? data : {},
                                          "components" => Array(components) } }
-      apply(messages, title: title.presence)
+      apply(messages, title: plain(title))
     end
 
     # Upserts components and top-level data keys on an existing surface.
@@ -57,7 +57,7 @@ module Workspace
       end
       return invalid("nothing to update: pass components and/or data") if messages.empty?
 
-      apply(messages, title: title.presence)
+      apply(messages, title: plain(title))
     end
 
     def remove(surface_id)
@@ -114,6 +114,11 @@ module Workspace
       result.is_a?(Hash) ? result : nil
     rescue JSON::ParserError
       nil
+    end
+
+    # Titles are plain text; a model that writes "&amp;" meant "&".
+    def plain(title)
+      title.present? ? CGI.unescapeHTML(title.to_s).strip : nil
     end
 
     # Ids are case-insensitive; the model tends to keep dataset ids uppercase.

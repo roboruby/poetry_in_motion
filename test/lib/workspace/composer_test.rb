@@ -54,6 +54,13 @@ class Workspace::ComposerTest < ActiveSupport::TestCase
     assert_equal [ "Renamed" ], @chat.tiles.map(&:heading)
   end
 
+  test "titles arrive as plain text even when the model writes entities" do
+    result = Workspace::Composer.new(@chat).render(surface_id: "loans", title: "Loans &amp; Cards",
+                                                   components: [ { "id" => "root", "component" => "Text", "text" => "x" } ])
+    assert result.ok
+    assert_equal [ "Loans & Cards" ], @chat.tiles.map(&:heading)
+  end
+
   test "update of a missing surface fails" do
     assert_not Workspace::Composer.new(@chat).update(surface_id: "nope", data: { "a" => 1 }).ok
   end

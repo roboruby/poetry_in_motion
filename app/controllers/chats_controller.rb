@@ -1,33 +1,30 @@
 class ChatsController < ApplicationController
-  before_action :set_chat, only: [ :show, :destroy ]
+  before_action :set_chat, only: %i[show destroy]
 
   def index
-    @chats = Chat.order(created_at: :desc)
+    @chats = Chat.recent.limit(30)
   end
 
-  def new
-    @chat = Chat.new
-    @selected_model = params[:model]
-    @chat_models = available_chat_models
-  end
-
+  # A new workspace, optionally opened with a first question.
   def create
-    prompt = params.dig(:chat, :prompt)
+    chat = Analyst.start
+    prompt = params[:prompt].to_s.strip
     if prompt.present?
-      @chat = Chat.create!(model: params.dig(:chat, :model).presence)
-      ChatResponseJob.perform_later(@chat.id, prompt)
-
-      redirect_to @chat, notice: "Chat was successfully created."
+      chat.update!(title: prompt.truncate(60))
+      chat.create_user_message(prompt)
+      ChatResponseJob.perform_later(chat.id)
     end
+    redirect_to chat
   end
 
   def show
-    @message = @chat.messages.build
+    @tiles = @chat.tiles
+    @messages = @chat.messages.visible.includes(:tool_calls, :parent_tool_call)
   end
 
   def destroy
     @chat.destroy!
-    redirect_to chats_path, notice: "Chat was successfully destroyed.", status: :see_other
+    redirect_to root_path, notice: "Workspace deleted.", status: :see_other
   end
 
   private

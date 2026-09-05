@@ -11,8 +11,15 @@ namespace :banking do
     counts.each { |table, count| puts format("%-13s %10d", table, count) }
   end
 
-  desc "Download and import the dataset"
-  task setup: %i[download import]
+  desc "Download and import the dataset (skips the import when the tables are already filled; FORCE=1 reimports)"
+  task setup: :environment do
+    Rake::Task["banking:download"].invoke
+    if Customer.none? || ENV["FORCE"].present?
+      Rake::Task["banking:import"].invoke
+    else
+      puts "dataset already imported (#{Customer.count} customers); FORCE=1 reimports"
+    end
+  end
 
   desc "Row counts per dataset table"
   task stats: :environment do

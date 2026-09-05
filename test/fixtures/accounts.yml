@@ -1,0 +1,18 @@
+ada_checking:
+  id: ACC00000000ADAC
+  customer_id: CUS0000000000ADA
+  account_type: Checking
+  balance_usd: 12500.50
+  open_date: 2021-03-05 09:00:00
+ada_savings:
+  id: ACC00000000ADAS
+  customer_id: CUS0000000000ADA
+  account_type: Savings
+  balance_usd: 80000.00
+  open_date: 2022-01-10 09:00:00
+grace_business:
+  id: ACC0000000GRACB
+  customer_id: CUS000000000GRAC
+  account_type: Business
+  balance_usd: 3200.25
+  open_date: 2023-08-01 09:00:00

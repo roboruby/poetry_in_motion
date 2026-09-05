@@ -1,0 +1,6 @@
+ada_mortgage:
+  id: LON00000000ADAM
+  customer_id: CUS0000000000ADA
+  loan_amount: 450000.00
+  interest_rate: 5.25
+  start_date: 2024-02-15 12:00:00

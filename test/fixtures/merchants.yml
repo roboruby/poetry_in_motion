@@ -1,0 +1,8 @@
+bookshop:
+  id: MER000000000BOOK
+  merchant_name: Babbage Books
+  city: London
+grocer:
+  id: MER000000000GROC
+  merchant_name: Turing Grocers
+  city: Arlington

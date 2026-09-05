@@ -1,0 +1,14 @@
+<%= form_with(url: chat_messages_path(chat), id: "composer", class: "border-t p-3",
+              data: { composer_target: "form", action: "turbo:submit-end->composer#reset" }) do %>
+  <label for="composer-input" class="sr-only">Message the analyst</label>
+  <%= poetry_input_group do %>
+    <%= poetry_input_group_textarea(id: "composer-input", name: "message[content]", rows: 2,
+                                    placeholder: "Ask the analyst…", autofocus: true,
+                                    data: { composer_target: "input", action: "keydown->composer#keydown" }) %>
+    <%= poetry_input_group_addon(align: :"block-end") do %>
+      <%= poetry_input_group_button(type: :submit, label: "Send") do %>
+        <%= poetry_icon(name: :"arrow-up", class: "size-4") %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

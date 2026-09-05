@@ -1,0 +1,12 @@
+<%# A surface on the workspace with its heading and a close control; the surface itself is A2UI rendered as Poetry components. %>
+<article id="<%= tile.dom_id %>" data-surface-tile="<%= tile.id %>" class="<%= tile_classes(tile) %>">
+  <header class="flex items-center justify-between gap-3 px-1 pb-2">
+    <h2 class="truncate text-sm font-medium text-muted-foreground"><%= tile.heading %></h2>
+    <%= form_with(url: chat_surface_path(chat, surface_id: tile.id), method: :delete, class: "contents") do %>
+      <%= poetry_button(variant: :ghost, size: :"icon-xs", label: "Remove #{tile.heading}", type: :submit) do %>
+        <%= poetry_icon(name: :x, class: "size-3.5") %>
+      <% end %>
+    <% end %>
+  </header>
+  <%= render "surfaces/surface", surface: tile.surface, chat: chat %>
+</article>

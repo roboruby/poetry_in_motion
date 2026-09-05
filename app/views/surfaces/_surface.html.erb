@@ -1,0 +1,4 @@
+<%# The A2UI surface as Poetry components; its buttons post agent events back to the chat. %>
+<%= Poetry::Agent::A2UI::Renderer.new(surface, view: self, action_url: chat_surface_actions_path(chat),
+                                       errors: local_assigns.fetch(:errors, {}),
+                                       html: { class: "rounded-xl border bg-card p-4 text-card-foreground shadow-sm" }).call %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_030000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_031000) do
   create_table "accounts", id: :string, force: :cascade do |t|
     t.string "account_type", null: false
     t.decimal "balance_usd", precision: 14, scale: 2
@@ -66,6 +66,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_030000) do
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "model_id"
+    t.string "title"
     t.datetime "updated_at", null: false
     t.index ["model_id"], name: "index_chats_on_model_id"
   end
@@ -163,6 +164,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_030000) do
     t.index ["transaction_date"], name: "index_transactions_on_transaction_date"
   end
 
+  create_table "ui_events", force: :cascade do |t|
+    t.integer "chat_id", null: false
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.integer "message_id"
+    t.json "payload", null: false
+    t.string "surface_id", null: false
+    t.string "title"
+    t.index ["chat_id", "surface_id"], name: "index_ui_events_on_chat_id_and_surface_id"
+    t.index ["chat_id"], name: "index_ui_events_on_chat_id"
+    t.index ["message_id"], name: "index_ui_events_on_message_id"
+  end
+
   add_foreign_key "accounts", "customers"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
@@ -175,4 +189,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_030000) do
   add_foreign_key "tool_calls", "messages"
   add_foreign_key "transactions", "accounts"
   add_foreign_key "transactions", "merchants"
+  add_foreign_key "ui_events", "chats"
+  add_foreign_key "ui_events", "messages"
 end

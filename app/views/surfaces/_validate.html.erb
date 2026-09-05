@@ -1,0 +1,4 @@
+<%# Renders a surface only to collect Poetry's warnings for the agent; the markup is discarded. %>
+<% renderer = Poetry::Agent::A2UI::Renderer.new(surface, view: self) %>
+<%= renderer.call %>
+<% warnings.concat(renderer.warnings) %>

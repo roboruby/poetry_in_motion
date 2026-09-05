@@ -1,26 +1,16 @@
-<% content_for :title, "Showing chat" %>
+<% content_for :title, @chat.display_title %>
+<% content_for :workspace_title, @chat.display_title %>
+<%= turbo_stream_from @chat %>
 
-<%= turbo_stream_from "chat_#{@chat.id}" %>
+<%# The workspace: surfaces grow on the canvas; the chat moves from center stage to the bottom-right as they arrive. %>
+<div class="group/workspace relative min-h-[70vh]"
+     data-controller="workspace"
+     data-workspace-state-value="<%= @tiles.any? ? "docked" : "hero" %>"
+     data-state="<%= @tiles.any? ? "docked" : "hero" %>">
+  <section id="surfaces" data-workspace-target="surfaces" aria-label="Workspace surfaces"
+           class="grid grid-cols-1 gap-6 transition-[padding] duration-300 xl:grid-cols-2 xl:group-data-[state=docked]/workspace:pr-[29rem]">
+    <%= render partial: "surfaces/tile", collection: @tiles, as: :tile, locals: { chat: @chat } %>
+  </section>
 
-<div class="md:w-2/3 w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
-  <h1 class="font-bold text-4xl">Showing chat #<%= @chat.id %></h1>
-
-  <div class="my-5">
-    <strong class="block font-medium mb-1">Model:</strong>
-    <%= @chat.model&.label || default_model_display_name %>
-  </div>
-
-  <div id="messages" class="min-w-full divide-y divide-gray-200 space-y-5 my-5">
-    <% @chat.messages.where.not(id: nil).each do |message| %>
-      <%= render message %>
-    <% end %>
-  </div>
-
-  <%= render "messages/form", chat: @chat, message: @message %>
-
-  <%= link_to "Back to chats", chats_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+  <%= render "chats/dock", chat: @chat, messages: @messages %>
 </div>

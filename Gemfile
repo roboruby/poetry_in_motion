@@ -66,4 +66,6 @@ gem "poetry-agent", ">= 0.0.3"
 gem "ruby_llm", "~> 1.16"
 gem "commonmarker", "~> 2.10"
 
-gem "dotenv-rails", "~> 3.2", groups: [:development, :test]
+gem "dotenv-rails", "~> 3.2", groups: [ :development, :test ]
+
+gem "minitest-mock", "~> 5.27", group: :test

@@ -1,0 +1,55 @@
+<%# The chat panel: center stage while the canvas is empty (hero), a bottom-right panel once surfaces exist (docked), a pill when minimized. %>
+<aside data-controller="composer" aria-label="Analyst chat"
+       class="flex flex-col overflow-hidden rounded-2xl border bg-background shadow-xl transition-all duration-300
+              group-data-[state=hero]/workspace:mx-auto group-data-[state=hero]/workspace:mt-4 group-data-[state=hero]/workspace:h-[min(72vh,46rem)] group-data-[state=hero]/workspace:w-full group-data-[state=hero]/workspace:max-w-2xl
+              group-data-[state=docked]/workspace:fixed group-data-[state=docked]/workspace:bottom-4 group-data-[state=docked]/workspace:right-4 group-data-[state=docked]/workspace:z-40 group-data-[state=docked]/workspace:h-[min(80vh,40rem)] group-data-[state=docked]/workspace:w-[min(100vw-2rem,27rem)]
+              group-data-[state=minimized]/workspace:hidden">
+  <header class="flex items-center justify-between gap-2 border-b px-4 py-2">
+    <div class="flex min-w-0 items-center gap-2">
+      <%= poetry_icon(name: :sparkles, class: "size-4 text-primary") %>
+      <span class="text-sm font-medium">Analyst</span>
+      <%= poetry_badge(variant: :outline) { Analyst::MODEL.split("/").last } %>
+    </div>
+    <%= poetry_button(variant: :ghost, size: :"icon-sm", label: "Minimize chat", type: :button,
+                      class: "hidden group-data-[state=docked]/workspace:inline-flex", data: { action: "workspace#minimize" }) do %>
+      <%= poetry_icon(name: :minus, class: "size-4") %>
+    <% end %>
+  </header>
+
+  <div class="hidden px-6 pb-2 pt-8 text-center group-data-[state=hero]/workspace:block">
+    <h1 class="text-2xl font-semibold tracking-tight">What do you want to see?</h1>
+    <p class="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+      Ask about customers, accounts, loans, cards, or transactions. Each answer builds the workspace around this chat.
+    </p>
+  </div>
+
+  <%= poetry_message_scroller(id: "chat", class: "min-h-0 flex-1") do %>
+    <% messages.each do |message| %>
+      <%= render "messages/item", message: message, version: Workspace::Streamer::SETTLED_VERSION %>
+    <% end %>
+  <% end %>
+
+  <div class="hidden flex-wrap justify-center gap-2 px-4 pb-3 group-data-[state=hero]/workspace:flex">
+    <% [ "Give me an overview of the bank", "Which merchants take the most money?", "Show me our riskiest large loans", "How did transaction volume move through 2025?" ].each do |prompt| %>
+      <%= poetry_button(variant: :outline, size: :sm, type: :button, data: { action: "composer#suggest", composer_prompt_param: prompt }) { prompt } %>
+    <% end %>
+  </div>
+
+  <% unless Analyst.configured? %>
+    <div class="px-4 pb-2">
+      <%= poetry_alert(variant: :destructive) do |alert| %>
+        <% alert.with_title { "No model key" } %>
+        <% alert.with_description { "Put OPENROUTER_API_KEY in .env (see .env.example) and restart the server; the analyst cannot answer until then." } %>
+      <% end %>
+    </div>
+  <% end %>
+  <%= render "chats/status", text: nil %>
+  <%= render "chats/composer", chat: chat %>
+</aside>
+
+<button type="button" data-action="workspace#expand"
+        class="fixed bottom-4 right-4 z-40 hidden items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm font-medium shadow-lg group-data-[state=minimized]/workspace:flex">
+  <%= poetry_icon(name: :"message-square", class: "size-4 text-primary") %>
+  Analyst
+  <span data-workspace-target="unread" hidden class="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">0</span>
+</button>

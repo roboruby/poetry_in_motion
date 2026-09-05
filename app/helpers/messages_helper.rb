@@ -1,25 +1,54 @@
 module MessagesHelper
-  def default_model_display_name
-    "Default: #{RubyLLM.models.find(RubyLLM.config.default_model).label}"
-  end
+  TOOL_LABELS = {
+    "bank_overview" => "Pulled the bank overview", "search_customers" => "Searched customers",
+    "customer_profile" => "Opened a customer profile", "transactions" => "Listed transactions",
+    "aggregate" => "Aggregated", "loans" => "Listed loans", "merchants" => "Ranked merchants",
+    "branches" => "Listed branches", "render_surface" => "Composed a surface",
+    "update_surface" => "Updated a surface", "remove_surface" => "Removed a surface"
+  }.freeze
 
-  def tool_result_partial(message)
-    name = message.respond_to?(:parent_tool_call) ? message.parent_tool_call&.name.to_s : ""
-    partial_for(prefix: "messages/tool_results", name: name)
-  end
+  ARGUMENT_HINTS = %w[query customer_id metric group_by surface_id title city].freeze
 
-  def tool_call_partial(tool_call)
-    partial_for(prefix: "messages/tool_calls", name: tool_call.name.to_s)
-  end
-
-  private
-
-  def partial_for(prefix:, name:)
-    normalized = name.to_s.underscore.tr("-", "_")
-    if normalized.present? && lookup_context.exists?(normalized, [ prefix ], true)
-      "#{prefix}/#{normalized}"
-    else
-      "#{prefix}/default"
+  # "Aggregated · transaction_volume by month"
+  def tool_call_label(tool_call)
+    name = tool_call.name.to_s
+    label = TOOL_LABELS.fetch(name) { name.humanize }
+    arguments = tool_call.arguments.is_a?(Hash) ? tool_call.arguments : {}
+    hint = case name
+    when "aggregate" then [ arguments["metric"], arguments["group_by"] && "by #{arguments["group_by"]}" ].compact.join(" ")
+    when "render_surface", "update_surface", "remove_surface" then arguments["title"] || arguments["surface_id"]
+    else ARGUMENT_HINTS.filter_map { |key| arguments[key] }.first
     end
+    hint.present? ? "#{label} · #{hint}" : label
+  end
+
+  # The short outcome of a tool result row.
+  def tool_result_label(message)
+    name = message.parent_tool_call&.name.to_s
+    result = JSON.parse(message.content.to_s) rescue nil
+    return "#{name.humanize} answered" unless result.is_a?(Hash)
+    return "#{name.humanize} failed: #{result["error"]}" if result["error"]
+
+    if result.key?("ok")
+      result["ok"] ? "Surface ready#{" with warnings" if result["warnings"]}" : "Surface rejected: #{Array(result["errors"]).first}"
+    elsif result["returned"]
+      "#{pluralize(result["returned"], "row")}#{" of #{result["total_matches"]}" if result["total_matches"]}"
+    elsif result["rows"]
+      pluralize(Array(result["rows"]).size, "group")
+    else
+      "Done"
+    end
+  end
+
+  def tool_result_failed?(message)
+    result = JSON.parse(message.content.to_s) rescue nil
+    result.is_a?(Hash) && (result["error"].present? || result["ok"] == false)
+  end
+
+  # "[ui action] view_transactions on customer-x: {...}" => "View transactions"
+  def action_label(message)
+    body = message.content.to_s.delete_prefix(Message::ACTION_PREFIX).strip
+    name = body.split(" on ", 2).first.to_s
+    name.humanize.presence || "Action"
   end
 end

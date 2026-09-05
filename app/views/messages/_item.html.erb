@@ -1,0 +1,4 @@
+<%# One transcript row inside the message scroller; the inner row is what streaming frames morph. %>
+<%= poetry_message_scroller_item(id: message.id, anchor: message.user? && !message.action?) do %>
+  <%= render "messages/row", message: message, version: version, streamed: nil %>
+<% end %>

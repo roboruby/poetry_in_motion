@@ -1,0 +1,19 @@
+<header class="sticky top-0 z-30 border-b bg-background/80 backdrop-blur">
+  <div class="mx-auto flex h-14 w-full max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6">
+    <%= link_to root_path, class: "flex items-center gap-2 font-semibold tracking-tight" do %>
+      <%= poetry_icon(name: :feather, class: "size-5 text-primary") %>
+      <span>Poetry in Motion</span>
+    <% end %>
+    <nav class="flex items-center gap-2" aria-label="Primary">
+      <% if content_for?(:workspace_title) %>
+        <span class="hidden max-w-xs truncate text-sm text-muted-foreground sm:inline"><%= yield :workspace_title %></span>
+      <% end %>
+      <%= poetry_button(variant: :ghost, size: :sm, href: root_path) { "Workspaces" } %>
+      <%= form_with(url: chats_path, method: :post, class: "contents") do %>
+        <%= poetry_button(size: :sm, type: :submit) do %>
+          <%= poetry_icon(name: :plus, class: "size-4") %> New workspace
+        <% end %>
+      <% end %>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,44 @@
+<%# The row's id and data-version let poetry-agent's vreplace morph it in place, newest frame wins. %>
+<div id="<%= message.dom_id_for_row %>" data-version="<%= version %>" class="px-4 py-1.5">
+  <% if message.action? %>
+    <%= poetry_marker(variant: :separator) do |marker| %>
+      <% marker.with_icon(name: :"mouse-pointer-click") %>
+      You pressed <%= action_label(message) %>
+    <% end %>
+  <% elsif message.user? %>
+    <%= poetry_message(align: :end) do %>
+      <%= poetry_bubble { message.content } %>
+    <% end %>
+  <% elsif message.assistant? %>
+    <% if message.tool_calls.any? %>
+      <div class="flex flex-col gap-1">
+        <% message.tool_calls.each do |tool_call| %>
+          <%= poetry_marker do |marker| %>
+            <% marker.with_icon(name: :"wand-sparkles") %>
+            <%= tool_call_label(tool_call) %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+    <% text = streamed.presence || message.content.presence %>
+    <% if text %>
+      <%= poetry_message do |row| %>
+        <% row.with_avatar { poetry_icon(name: :feather, class: "size-4 text-primary") } %>
+        <%= poetry_bubble(variant: :ghost) do %>
+          <%= poetry_typeset(preset: "docs") { Workspace::Markdown.render(text) } %>
+        <% end %>
+      <% end %>
+    <% elsif message.pending? %>
+      <%= poetry_marker(announce: :status) do |marker| %>
+        <% marker.with_icon { poetry_spinner } %>
+        Thinking
+      <% end %>
+    <% end %>
+  <% elsif message.tool_result? %>
+    <% failed = tool_result_failed?(message) %>
+    <%= poetry_marker(class: failed ? "text-destructive" : nil) do |marker| %>
+      <% marker.with_icon(name: failed ? :"circle-alert" : :check) %>
+      <%= tool_result_label(message) %>
+    <% end %>
+  <% end %>
+</div>

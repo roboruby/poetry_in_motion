@@ -1,0 +1,16 @@
+ada:
+  id: CUS0000000000ADA
+  first_name: Ada
+  last_name: Lovelace
+  email: ada@example.com
+  city: London
+  credit_score: 812
+  created_at: 2021-03-04 10:00:00
+grace:
+  id: CUS000000000GRAC
+  first_name: Grace
+  last_name: Hopper
+  email: grace@example.com
+  city: Arlington
+  credit_score: 560
+  created_at: 2023-07-19 08:30:00

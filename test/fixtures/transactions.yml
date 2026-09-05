@@ -1,0 +1,18 @@
+ada_books:
+  id: TXN000000000ADAB
+  account_id: ACC00000000ADAC
+  merchant_id: MER000000000BOOK
+  amount_usd: 120.00
+  transaction_date: 2025-11-03 14:20:00
+ada_groceries:
+  id: TXN000000000ADAG
+  account_id: ACC00000000ADAC
+  merchant_id: MER000000000GROC
+  amount_usd: 80.00
+  transaction_date: 2025-12-07 18:45:00
+grace_books:
+  id: TXN00000000GRACB
+  account_id: ACC0000000GRACB
+  merchant_id: MER000000000BOOK
+  amount_usd: 300.00
+  transaction_date: 2025-12-20 09:10:00

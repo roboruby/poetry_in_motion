@@ -59,9 +59,9 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "poetry", ">= 0.0.3"
-gem "poetry-charts", ">= 0.0.3"
-gem "poetry-agent", ">= 0.0.3"
+gem "poetry", ">= 0.1.0"
+gem "poetry-charts", ">= 0.1.0"
+gem "poetry-agent", ">= 0.1.0"
 
 gem "ruby_llm", "~> 1.16"
 gem "commonmarker", "~> 2.10"

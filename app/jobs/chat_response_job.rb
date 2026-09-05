@@ -18,9 +18,10 @@ class ChatResponseJob < ApplicationJob
 
     streamer.status("Thinking")
     chat.complete { |chunk| stream.push(chunk) }
-  rescue RubyLLM::Error => error
+  rescue StandardError => error
     Rails.logger.error("ChatResponseJob #{chat_id}: #{error.class}: #{error.message}")
-    streamer&.error(error.message)
+    discard_placeholder(chat)
+    streamer&.error(describe(error))
   ensure
     streamer&.clear_status
   end
@@ -31,6 +32,21 @@ class ChatResponseJob < ApplicationJob
     case tool_call.name.to_s
     when "render_surface", "update_surface", "remove_surface" then "Composing the workspace"
     else "Querying #{tool_call.name.to_s.humanize.downcase}"
+    end
+  end
+
+  # RubyLLM removes its empty assistant row on provider errors; anything
+  # else (a truncated tool call that fails to parse) leaves it behind.
+  def discard_placeholder(chat)
+    last = chat&.messages&.reload&.last
+    last.destroy if last&.pending?
+  end
+
+  def describe(error)
+    case error
+    when JSON::ParserError then "the model's reply was cut off before it finished (try a smaller surface or ask again)"
+    when RubyLLM::Error then error.message
+    else "#{error.class.name.demodulize.underscore.humanize}: #{error.message}".truncate(200)
     end
   end
 end

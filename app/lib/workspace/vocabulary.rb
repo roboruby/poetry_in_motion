@@ -84,7 +84,8 @@ module Workspace
 
     DATA_SCHEMA = {
       "type" => "object",
-      "description" => "The surface's data model: values components bind to with { path: \"/key\" } (table rows, chart data, filter fields).",
+      "description" => "The surface's data model: values components bind to with { path: \"/key\" } (table rows, chart data, filter fields). " \
+                       "A value of { fromTool: \"<tool name>\", key: \"rows\" } copies that key from the tool's latest result instead of retyping it.",
       "additionalProperties" => true
     }.freeze
 

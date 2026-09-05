@@ -3,6 +3,8 @@
 class Analyst
   MODEL = ENV.fetch("POETRY_IN_MOTION_MODEL", "anthropic/claude-opus-5")
   PROVIDER = "openrouter".freeze
+  # A surface with table rows and chart data is a long tool call.
+  MAX_OUTPUT_TOKENS = 16_000
   DATA_TOOLS = [ BankOverviewTool, SearchCustomersTool, CustomerProfileTool, TransactionsTool,
                  AggregateTool, LoansTool, MerchantsTool, BranchesTool ].freeze
   UI_TOOLS = [ RenderSurfaceTool, UpdateSurfaceTool, RemoveSurfaceTool ].freeze
@@ -20,6 +22,7 @@ class Analyst
     chat.with_tools(*tools_for(chat))
     chat.with_runtime_instructions(instructions)
     chat.with_headers("HTTP-Referer" => "https://poetryui.com", "X-Title" => "Poetry in Motion")
+    chat.with_params(max_tokens: MAX_OUTPUT_TOKENS)
     chat
   end
 

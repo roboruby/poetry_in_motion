@@ -32,8 +32,11 @@ A surface is a flat list of components; exactly one has id "root" and parents re
 - Comparison or trend: Card with a Chart (bar for categories, line or area for months, donut for shares).
 - Filters: TextField / ChoicePicker / DateTimeInput bound to data paths plus a primary Button whose action.event context
   binds those paths ({ path: "/city" }); when the event arrives, run the query and update the surface's rows.
-Put table rows and chart data in the surface data model and bind with { path: "/rows" } when the same data feeds
-several components; inline arrays are fine otherwise. Chart data rows are objects; series keys must be numeric.
+Put table rows and chart data in the surface data model and bind with { path: "/rows" }. Never retype rows a tool
+returned: set the data key to { "fromTool": "merchants", "key": "rows" } (or "rows" from aggregate, transactions, loans,
+search_customers, branches; "monthly_volume_2025" or "credit_bands" from bank_overview; "accounts", "loans",
+"recent_transactions" from customer_profile) and the workspace copies that tool's latest result into the model. Small
+hand-made arrays (a few computed points) may be inline. Chart data rows are objects; series keys must be numeric.
 
 ## Button events
 A pressed Button reaches you as a user message that starts with "[ui action]" followed by the event name, the surface id,

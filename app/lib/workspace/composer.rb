@@ -30,6 +30,7 @@ module Workspace
 
     # Creates a surface, replacing one with the same id.
     def render(surface_id:, title:, components:, data: nil)
+      data = resolve_references(data)
       return invalid("surface_id must be kebab-case (letters, digits, - or _)") unless Vocabulary::SURFACE_ID_PATTERN.match?(surface_id.to_s)
 
       messages = []
@@ -42,6 +43,7 @@ module Workspace
 
     # Upserts components and top-level data keys on an existing surface.
     def update(surface_id:, components: nil, data: nil, title: nil)
+      data = resolve_references(data)
       return invalid("no surface #{surface_id.inspect}; render_surface creates one") unless chat.surface_ids.include?(surface_id)
 
       messages = []
@@ -82,9 +84,36 @@ module Workspace
       Result.new(ok: true, surface_ids: changed, errors: [], warnings: warnings)
     end
 
-    private
+# Resolves { "fromTool" => name, "key" => path } data references against
+# the latest result the named tool returned in this chat, so the agent
+# points at rows instead of retyping them. Unknown references resolve
+# to nil and the surface renders empty rather than failing.
+def resolve_references(data)
+  return data unless data.is_a?(Hash)
 
-    def invalid(text)
+  data.transform_values do |value|
+    next value unless value.is_a?(Hash) && value["fromTool"].present?
+
+    result = latest_tool_result(value["fromTool"].to_s)
+    next nil if result.nil?
+
+    value["key"].present? ? value["key"].to_s.split(".").reduce(result) { |node, key| node.is_a?(Hash) ? node[key] : nil } : result
+  end
+end
+
+def latest_tool_result(tool_name)
+  message = chat.messages.joins(:parent_tool_call).where(role: "tool", tool_calls: { name: tool_name }).order(:id).last
+  return nil unless message
+
+  result = JSON.parse(message.content.to_s)
+  result.is_a?(Hash) ? result : nil
+rescue JSON::ParserError
+  nil
+end
+
+private
+
+def invalid(text)
       Result.new(ok: false, surface_ids: [], errors: [ text ], warnings: [])
     end
 

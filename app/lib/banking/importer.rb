@@ -36,11 +36,11 @@ module Banking
       connection.execute("ATTACH DATABASE #{connection.quote(source.to_s)} AS src")
       begin
         connection.transaction do
-          TABLES.keys.reverse_each { |table| connection.execute("DELETE FROM #{table}") }
+          TABLES.keys.reverse_each { |table| connection.execute("DELETE FROM #{connection.quote_table_name(table)}") }
           TABLES.each do |table, (destination, origin)|
             connection.execute(<<~SQL)
-              INSERT INTO #{table} (#{destination.join(", ")})
-              SELECT #{origin.join(", ")} FROM src.#{table}
+              INSERT INTO #{connection.quote_table_name(table)} (#{destination.map { |column| connection.quote_column_name(column) }.join(", ")})
+              SELECT #{origin.map { |column| connection.quote_column_name(column) }.join(", ")} FROM src.#{connection.quote_table_name(table)}
             SQL
           end
         end
@@ -51,7 +51,7 @@ module Banking
     end
 
     def counts
-      TABLES.keys.to_h { |table| [ table, connection.select_value("SELECT COUNT(*) FROM #{table}").to_i ] }
+      TABLES.keys.to_h { |table| [ table, connection.select_value("SELECT COUNT(*) FROM #{connection.quote_table_name(table)}").to_i ] }
     end
 
     private

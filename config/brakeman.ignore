@@ -1,0 +1,17 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "5e65df8434979889db678e72b20d13177955628ba33abd0967751d87e54aae3f",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/lib/banking/importer.rb",
+      "line": 42,
+      "code": "connection.execute(\"INSERT INTO #{connection.quote_table_name(table)} (#{destination.map do\n connection.quote_column_name(column)\n end.join(\", \")})\\nSELECT #{origin.map do\n connection.quote_column_name(column)\n end.join(\", \")} FROM src.#{connection.quote_table_name(table)}\\n\")",
+      "note": "Table and column names come from the frozen TABLES constant and are quoted; nothing user-supplied reaches the SQL."
+    }
+  ],
+  "updated": "2026-09-05T03:03:30Z",
+  "brakeman_version": "8.0.6"
+}

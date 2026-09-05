@@ -6,7 +6,7 @@ class SurfaceActionsController < ApplicationController
   before_action :set_chat
 
   def create
-    payload = params.require(:a2ui).permit!.to_h
+    payload = params.require(:a2ui).permit(:surface, :action, values: {}).to_h
     session = @chat.surface_session
     surface_id = payload["surface"].to_s
     action = session.action(surface_id: surface_id, source: payload["action"].to_s, values: payload["values"] || {})

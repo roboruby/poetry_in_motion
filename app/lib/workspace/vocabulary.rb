@@ -66,7 +66,7 @@ module Workspace
       "Icon" => { about: "A lucide icon.", props: { "name" => "lucide icon name (required)" } }
     }.freeze
 
-    SURFACE_ID_PATTERN = /\A[a-z0-9][a-z0-9_-]{0,63}\z/
+    SURFACE_ID_PATTERN = /\A[a-z0-9][a-z0-9_-]{0,63}\z/i
 
     COMPONENTS_SCHEMA = {
       "type" => "array",

@@ -33,9 +33,14 @@ class Workspace::ComposerTest < ActiveSupport::TestCase
     assert_match(/circular/, result.errors.first)
   end
 
-  test "bad surface ids are refused" do
+  test "bad surface ids are refused and mixed case ids are normalized" do
     result = Workspace::Composer.new(@chat).render(surface_id: "Not Valid!", title: "X", components: [])
     assert_not result.ok
+    result = Workspace::Composer.new(@chat).render(surface_id: "merchant-MER6BHDTKK0NKCT", title: "M",
+                                                   components: [ { "id" => "root", "component" => "Text", "text" => "m" } ])
+    assert result.ok
+    assert_equal [ "merchant-mer6bhdtkk0nkct" ], @chat.surface_ids
+    assert Workspace::Composer.new(@chat).remove("MERCHANT-MER6BHDTKK0NKCT").ok
   end
 
   test "update merges data and components on an existing surface" do

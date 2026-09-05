@@ -1,5 +1,5 @@
 namespace :banking do
-  desc "Download the synthetic banking dataset (Kaggle, CC BY 4.0) into tmp/banking"
+  desc "Extract the bundled dataset (db/data/bank_sqlite.db.tar.xz) into tmp/banking, or download it from Kaggle"
   task download: :environment do
     path = Banking::Dataset.new.download
     puts "dataset database at #{path}"
@@ -11,7 +11,7 @@ namespace :banking do
     counts.each { |table, count| puts format("%-13s %10d", table, count) }
   end
 
-  desc "Download and import the dataset (skips the import when the tables are already filled; FORCE=1 reimports)"
+  desc "Extract and import the dataset (skips the import when the tables are already filled; FORCE=1 reimports)"
   task setup: :environment do
     Rake::Task["banking:download"].invoke
     if Customer.none? || ENV["FORCE"].present?

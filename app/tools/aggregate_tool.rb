@@ -44,9 +44,13 @@ class AggregateTool < ApplicationTool
     "credit_band" => [ :customers, CREDIT_BAND_SQL ]
   }.freeze
 
+  ORDERS = { "value_desc" => "value DESC", "value_asc" => "value ASC", "key_asc" => "key ASC", "key_desc" => "key DESC" }.freeze
+
   description "Grouped metrics for charts and breakdowns. metric: #{METRICS.keys.join(" | ")}. " \
               "group_by: #{GROUPS.keys.join(" | ")} (month and year use the base table's date: transaction date, account open date, " \
-              "customer since, loan start, card expiry). Filters: from/to on that date, account_type, card_type, city (customer city), credit_band."
+              "customer since, loan start, card expiry). Filters: from/to on that date, account_type, card_type, city (customer city), " \
+              "credit_band, merchant_id (transaction metrics), customer_id, account_id. " \
+              "Example: one merchant's monthly trend is transaction_volume by month with merchant_id."
   param :metric, desc: "One of the metrics listed in the description", required: true
   param :group_by, desc: "One of the groupings listed in the description; none returns a single total", required: false
   param :from, desc: "ISO date lower bound on the base date", required: false
@@ -55,10 +59,14 @@ class AggregateTool < ApplicationTool
   param :card_type, desc: "Credit | Debit", required: false
   param :city, desc: "Customer city", required: false
   param :credit_band, desc: "Excellent | Good | Fair | Poor | Very poor", required: false
+  param :merchant_id, desc: "Restrict transaction metrics to one merchant", required: false
+  param :customer_id, desc: "Restrict to one customer", required: false
+  param :account_id, desc: "Restrict transaction, card, or account metrics to one account", required: false
   param :order, desc: "value_desc (default for categories) | value_asc | key_asc (default for month/year) | key_desc", required: false
   param :limit, type: :integer, desc: "Groups to return, default 12, max 100", required: false
 
-  def execute(metric:, group_by: nil, from: nil, to: nil, account_type: nil, card_type: nil, city: nil, credit_band: nil, order: nil, limit: nil)
+  def execute(metric:, group_by: nil, from: nil, to: nil, account_type: nil, card_type: nil, city: nil, credit_band: nil,
+              merchant_id: nil, customer_id: nil, account_id: nil, order: nil, limit: nil)
     base_name, aggregate = METRICS[metric.to_s]
     return failure("unknown metric #{metric.inspect}; use #{METRICS.keys.join(", ")}") unless base_name
 
@@ -66,9 +74,11 @@ class AggregateTool < ApplicationTool
     group = group_by.presence || "none"
     return failure("unknown group_by #{group.inspect}; use #{GROUPS.keys.join(", ")}") unless GROUPS.key?(group)
 
-    scope = base[:model].constantize.all
-    needed = []
+    ordering = order.presence || (%w[month year].include?(group) ? "key_asc" : "value_desc")
+    return failure("unknown order #{order.inspect}; use #{ORDERS.keys.join(", ")}") unless ORDERS.key?(ordering)
+
     key_sql = nil
+    needed = []
     if (definition = GROUPS[group])
       table, sql = definition
       key_sql = table ? sql : format(sql, base[:date])
@@ -77,7 +87,11 @@ class AggregateTool < ApplicationTool
     needed << :accounts if account_type.present?
     needed << :cards if card_type.present?
     needed << :customers if city.present? || credit_band.present?
+    needed << :transactions if merchant_id.present?
+    needed << :accounts if customer_id.present? && %i[customers loans].exclude?(base_name)
+    needed << :accounts if account_id.present?
 
+    scope = base[:model].constantize.all
     needed.uniq.each do |table|
       next if table == base_name
 
@@ -87,8 +101,30 @@ class AggregateTool < ApplicationTool
       scope = scope.joins(join)
     end
 
-    scope = scope.where(Arel.sql(base[:date]) => time_or(from, DATA_START).beginning_of_day..) if from.present?
-    scope = scope.where(Arel.sql(base[:date]) => ..time_or(to, DATA_END).end_of_day) if to.present?
+    scope = filter(scope, base_name, from: from, to: to, account_type: account_type, card_type: card_type, city: city,
+                          credit_band: credit_band, merchant_id: merchant_id, customer_id: customer_id, account_id: account_id)
+    return scope if scope.is_a?(String)
+
+    if key_sql.nil?
+      value = scope.pick(Arel.sql(aggregate))
+      return ok(metric: metric, group_by: "none", total: value.is_a?(Numeric) ? value : value.to_f)
+    end
+
+    rows = scope.group(Arel.sql(key_sql))
+                .order(Arel.sql(ORDERS.fetch(ordering)))
+                .limit(limit_of(limit, default: 12, max: 100))
+                .pluck(Arel.sql("#{key_sql} AS key"), Arel.sql("#{aggregate} AS value"))
+                .map { |key, value| { key: key, value: value.is_a?(Numeric) ? value : value.to_f } }
+    ok(metric: metric, group_by: group, groups: scope.distinct.count(Arel.sql(key_sql)), rows: rows)
+  end
+
+  private
+
+  # Applies the filters; answers a failure string for an unknown credit band.
+  def filter(scope, base_name, from:, to:, account_type:, card_type:, city:, credit_band:, merchant_id:, customer_id:, account_id:)
+    date = Arel.sql(BASES[base_name][:date])
+    scope = scope.where(date => time_or(from, DATA_START).beginning_of_day..) if from.present?
+    scope = scope.where(date => ..time_or(to, DATA_END).end_of_day) if to.present?
     scope = scope.where(accounts: { account_type: account_type }) if account_type.present?
     scope = scope.where(cards: { card_type: card_type }) if card_type.present?
     scope = scope.where("LOWER(customers.city) = ?", city.to_s.downcase) if city.present?
@@ -98,24 +134,21 @@ class AggregateTool < ApplicationTool
 
       scope = scope.where(customers: { credit_score: range })
     end
-
-    if key_sql.nil?
-      value = scope.pick(Arel.sql(aggregate))
-      return ok(metric: metric, group_by: "none", total: value.is_a?(Numeric) ? value : value.to_f)
+    scope = scope.where(transactions: { merchant_id: merchant_id.to_s.strip.upcase }) if merchant_id.present?
+    if customer_id.present?
+      id = customer_id.to_s.strip.upcase
+      scope = case base_name
+      when :customers then scope.where(id: id)
+      when :loans then scope.where(customer_id: id)
+      else scope.where(accounts: { customer_id: id })
+      end
     end
-
-    ordering = order.presence || (%w[month year].include?(group) ? "key_asc" : "value_desc")
-    order_sql = { "value_desc" => "value DESC", "value_asc" => "value ASC", "key_asc" => "key ASC", "key_desc" => "key DESC" }
-                  .fetch(ordering) { return failure("unknown order #{order.inspect}") }
-    rows = scope.group(Arel.sql(key_sql))
-                .order(Arel.sql(order_sql))
-                .limit(limit_of(limit, default: 12, max: 100))
-                .pluck(Arel.sql("#{key_sql} AS key"), Arel.sql("#{aggregate} AS value"))
-                .map { |key, value| { key: key, value: value.is_a?(Numeric) ? value : value.to_f } }
-    ok(metric: metric, group_by: group, groups: scope.distinct.count(Arel.sql(key_sql)), rows: rows)
+    if account_id.present?
+      id = account_id.to_s.strip.upcase
+      scope = base_name == :accounts ? scope.where(id: id) : scope.where(accounts: { id: id })
+    end
+    scope
   end
-
-  private
 
   def supported(base_name)
     joinable = [ base_name ] + BASES[base_name][:joins].keys

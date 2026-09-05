@@ -53,7 +53,9 @@ the spec's basic catalog (text, layout, forms, buttons) plus `Grid`, `Stat`, `Ba
 renders a Poetry component; the analyst never writes HTML. `Workspace::Composer` validates a
 surface by replaying the session and rendering it once, persists the accepted messages, and streams
 the changed tiles over Turbo Streams. Rejected surfaces (an unknown component, a cycle) come back
-to the model as errors and persist nothing.
+to the model as errors and persist nothing. A surface's data model can point at a tool's latest
+result (`{ "fromTool": "merchants", "key": "rows" }`) so the model never retypes rows it just
+fetched; the composer copies the result in before validating.
 
 **Streaming** follows Poetry's message scroller contract: rows are appended when a message is
 created and morphed in place while the assistant writes, through poetry-agent's versioned

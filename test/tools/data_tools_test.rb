@@ -48,6 +48,15 @@ class DataToolsTest < ActiveSupport::TestCase
     assert_equal({ "Excellent" => 92500.5, "Very poor" => 3200.25 }, result["rows"].to_h { |row| [ row["key"], row["value"] ] })
   end
 
+test "aggregate narrows to one merchant, customer, or account" do
+  result = run_tool(AggregateTool, metric: "transaction_volume", group_by: "month", merchant_id: "MER000000000BOOK")
+  assert_equal [ { "key" => "2025-11", "value" => 120.0 }, { "key" => "2025-12", "value" => 300.0 } ], result["rows"]
+  assert_equal 200.0, run_tool(AggregateTool, metric: "transaction_volume", customer_id: "CUS0000000000ADA")["total"]
+  assert_equal 450000.0, run_tool(AggregateTool, metric: "loan_exposure", customer_id: "CUS0000000000ADA")["total"]
+  assert_equal 2, run_tool(AggregateTool, metric: "transaction_count", account_id: "ACC00000000ADAC")["total"]
+  assert_equal 1, run_tool(AggregateTool, metric: "card_count", account_id: "ACC00000000ADAC")["total"]
+end
+
   test "aggregate totals and refuses unsupported pairs" do
     assert_equal 2, run_tool(AggregateTool, metric: "customer_count")["total"]
     assert_match(/cannot be grouped/, run_tool(AggregateTool, metric: "loan_exposure", group_by: "merchant")["error"])

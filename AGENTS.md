@@ -15,7 +15,9 @@ README.md explains the architecture; this file carries the rules.
   Adding a component means all three: a vocabulary entry, a `render_<name>`
   method that renders a Poetry component, and a catalog test.
 - `Workspace::Composer` is the only writer of `ui_events` and the only
-  caller of the tile streams; tools and controllers go through it.
+  caller of the tile streams; tools and controllers go through it. It
+  resolves `{ fromTool, key }` data references against the chat's latest
+  tool results before validating, so persisted events hold real rows.
 - Chat rows: appended at version 0 on create, morphed by `vreplace` with a
   rising version while streaming, settled at `Streamer::SETTLED_VERSION`.
   RubyLLM creates every row (tool results included) as an empty assistant

@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 // The chat composer: Enter sends, Shift+Enter breaks a line, suggestion
 // chips fill and send, and the field clears once the turn is accepted.
 export default class extends Controller {
-  static targets = ["input"]
+  static targets = ["form", "input"]
 
   keydown(event) {
     if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
@@ -21,7 +21,7 @@ export default class extends Controller {
 
   submit() {
     if (this.inputTarget.value.trim() === "") return
-    this.element.requestSubmit()
+    this.formTarget.requestSubmit()
   }
 
   reset(event) {

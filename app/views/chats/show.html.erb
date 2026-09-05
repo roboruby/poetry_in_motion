@@ -8,7 +8,7 @@
      data-workspace-state-value="<%= @tiles.any? ? "docked" : "hero" %>"
      data-state="<%= @tiles.any? ? "docked" : "hero" %>">
   <section id="surfaces" data-workspace-target="surfaces" aria-label="Workspace surfaces"
-           class="grid grid-cols-1 gap-6 transition-[padding] duration-300 xl:grid-cols-2 xl:group-data-[state=docked]/workspace:pr-[29rem]">
+           class="grid grid-cols-1 gap-6 transition-[padding] duration-300 xl:group-data-[state=docked]/workspace:pr-[29rem]">
     <%= render partial: "surfaces/tile", collection: @tiles, as: :tile, locals: { chat: @chat } %>
   </section>
 

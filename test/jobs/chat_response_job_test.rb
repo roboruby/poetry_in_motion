@@ -24,7 +24,9 @@ class ChatResponseJobTest < ActiveJob::TestCase
       end
     end
 
-    assert streams.any? { |stream| stream["action"] == "append" && stream["target"] == "chat-messages" }, "assistant row appended"
+    appended = streams.find { |stream| stream["action"] == "append" && stream["target"] == "chat-messages" }
+    assert appended, "assistant row appended"
+    assert_includes appended.to_html, %(data-version="0"), "appended rows start at version 0"
     assert streams.any? { |stream| stream["action"] == "vreplace" && stream.to_html.include?("Hello analyst") }, "settled row replaced"
     assert streams.any? { |stream| stream["target"] == "chat-status" }, "status line updated"
   end

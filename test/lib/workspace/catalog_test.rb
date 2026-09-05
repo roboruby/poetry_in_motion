@@ -18,7 +18,7 @@ class Workspace::CatalogTest < ActiveSupport::TestCase
       { "id" => "b", "component" => "Stat", "label" => "Churn", "value" => "2.1%", "trend" => "down", "sentiment" => "positive", "description" => "down is good" }
     ])
     assert_empty warnings
-    assert_includes html, "xl:grid-cols-3"
+    assert_includes html, "@2xl:grid-cols-3"
     assert_equal 2, html.scan('data-slot="stat"').size
     assert_includes html, "down is good"
   end

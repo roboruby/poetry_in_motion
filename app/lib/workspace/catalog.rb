@@ -8,11 +8,13 @@ module Workspace
     ID = "https://poetryui.com/a2ui/poetry_in_motion/catalog.json"
     EXTRA_COMPONENTS = %w[Grid Stat Badge Table Chart Metadata Empty].freeze
 
+    # Column counts answer to the surface's own width (a container query),
+    # not the viewport's, so a grid reads right beside the docked chat.
     GRID_COLUMNS = {
       "1" => "grid grid-cols-1 gap-4",
-      "2" => "grid grid-cols-1 gap-4 md:grid-cols-2",
-      "3" => "grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3",
-      "4" => "grid grid-cols-2 gap-4 xl:grid-cols-4"
+      "2" => "grid grid-cols-1 gap-4 @md:grid-cols-2",
+      "3" => "grid grid-cols-1 gap-4 @md:grid-cols-2 @2xl:grid-cols-3",
+      "4" => "grid grid-cols-2 gap-4 @2xl:grid-cols-4"
     }.freeze
     CHART_COLORS = %w[var(--chart-1) var(--chart-2) var(--chart-3) var(--chart-4) var(--chart-5)].freeze
     CHART_KINDS = %w[bar line area pie donut].freeze

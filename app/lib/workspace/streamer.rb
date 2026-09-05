@@ -5,6 +5,9 @@ module Workspace
   # never repaint a settled row.
   class Streamer
     SETTLED_VERSION = 1_000_000
+    # A row appended on creation starts here; streamed frames and the settled
+    # render both outrank it.
+    INITIAL_VERSION = 0
     MESSAGES_TARGET = "chat-messages".freeze
     SURFACES_TARGET = "surfaces".freeze
     STATUS_TARGET = "chat-status".freeze
@@ -18,7 +21,7 @@ module Workspace
     end
 
     def append_row(message)
-      broadcast TurboStream.append(MESSAGES_TARGET, render("messages/item", message: message, version: SETTLED_VERSION))
+      broadcast TurboStream.append(MESSAGES_TARGET, render("messages/item", message: message, version: INITIAL_VERSION))
     end
 
     # @param streamed [String, nil] partial assistant text while the model is still writing

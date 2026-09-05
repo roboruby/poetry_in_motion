@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_05_023119) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_05_030000) do
+  create_table "accounts", id: :string, force: :cascade do |t|
+    t.string "account_type", null: false
+    t.decimal "balance_usd", precision: 14, scale: 2
+    t.string "customer_id", null: false
+    t.datetime "open_date"
+    t.index ["account_type"], name: "index_accounts_on_account_type"
+    t.index ["customer_id"], name: "index_accounts_on_customer_id"
+  end
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -39,11 +48,54 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_023119) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "branches", id: :string, force: :cascade do |t|
+    t.string "branch_name"
+    t.string "city"
+    t.string "country"
+    t.string "manager_name"
+  end
+
+  create_table "cards", id: :string, force: :cascade do |t|
+    t.string "account_id", null: false
+    t.string "card_type", null: false
+    t.datetime "expiration_date"
+    t.index ["account_id"], name: "index_cards_on_account_id"
+    t.index ["card_type"], name: "index_cards_on_card_type"
+  end
+
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "model_id"
     t.datetime "updated_at", null: false
     t.index ["model_id"], name: "index_chats_on_model_id"
+  end
+
+  create_table "customers", id: :string, force: :cascade do |t|
+    t.string "city"
+    t.datetime "created_at"
+    t.integer "credit_score"
+    t.string "email"
+    t.string "first_name"
+    t.string "last_name"
+    t.index ["city"], name: "index_customers_on_city"
+    t.index ["credit_score"], name: "index_customers_on_credit_score"
+    t.index ["email"], name: "index_customers_on_email"
+    t.index ["last_name", "first_name"], name: "index_customers_on_last_name_and_first_name"
+  end
+
+  create_table "loans", id: :string, force: :cascade do |t|
+    t.string "customer_id", null: false
+    t.decimal "interest_rate", precision: 5, scale: 2
+    t.decimal "loan_amount", precision: 14, scale: 2
+    t.datetime "start_date"
+    t.index ["customer_id"], name: "index_loans_on_customer_id"
+    t.index ["start_date"], name: "index_loans_on_start_date"
+  end
+
+  create_table "merchants", id: :string, force: :cascade do |t|
+    t.string "city"
+    t.string "merchant_name"
+    t.index ["city"], name: "index_merchants_on_city"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -101,11 +153,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_05_023119) do
     t.index ["tool_call_id"], name: "index_tool_calls_on_tool_call_id", unique: true
   end
 
+  create_table "transactions", id: :string, force: :cascade do |t|
+    t.string "account_id", null: false
+    t.decimal "amount_usd", precision: 12, scale: 2
+    t.string "merchant_id", null: false
+    t.datetime "transaction_date"
+    t.index ["account_id"], name: "index_transactions_on_account_id"
+    t.index ["merchant_id"], name: "index_transactions_on_merchant_id"
+    t.index ["transaction_date"], name: "index_transactions_on_transaction_date"
+  end
+
+  add_foreign_key "accounts", "customers"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cards", "accounts"
   add_foreign_key "chats", "models"
+  add_foreign_key "loans", "customers"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
   add_foreign_key "messages", "tool_calls"
   add_foreign_key "tool_calls", "messages"
+  add_foreign_key "transactions", "accounts"
+  add_foreign_key "transactions", "merchants"
 end

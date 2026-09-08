@@ -10,3 +10,8 @@
 @source "./poetry/safelist.txt";
 @import "./poetry/charts.css";
 @import "./poetry/style-charts.css" layer(base);
+
+/* A KPI value the model formats too long for its grid cell wraps inside the card instead of running over the neighbour. */
+[data-slot="stat-value"] {
+  overflow-wrap: anywhere;
+}

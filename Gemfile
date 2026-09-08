@@ -66,3 +66,5 @@ gem "commonmarker", "~> 2.10"
 gem "dotenv-rails", "~> 3.2", groups: [ :development, :test ]
 
 gem "minitest-mock", "~> 5.27", group: :test
+# poetry:check parses ERB with herb (development only)
+gem "herb", group: :development

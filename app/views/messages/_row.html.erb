@@ -1,5 +1,5 @@
 <%# The row's id and data-version let poetry-agent's vreplace morph it in place, newest frame wins. %>
-<div id="<%= message.dom_id_for_row %>" data-version="<%= version %>" class="px-4 py-1.5">
+<div id="<%= message.dom_id_for_row %>" data-version="<%= version %>" class="px-4 py-1.5<%= " hidden" if message.pending? && local_assigns[:streamed].blank? %>">
   <% if message.action? %>
     <%= poetry_marker(variant: :separator) do |marker| %>
       <% marker.with_icon(name: :"mouse-pointer-click") %>
@@ -28,12 +28,9 @@
           <%= poetry_typeset(preset: "docs") { Workspace::Markdown.render(text) } %>
         <% end %>
       <% end %>
-    <% elsif message.pending? %>
-      <%= poetry_marker(announce: :status) do |marker| %>
-        <% marker.with_icon { poetry_spinner } %>
-        Thinking
-      <% end %>
     <% end %>
+    <%# A pending row shows nothing: the status line under the list is the one
+        live indicator (Thinking, Querying ..., Composing); text morphs in here. %>
   <% elsif message.tool_result? %>
     <% failed = tool_result_failed?(message) %>
     <%= poetry_marker(class: failed ? "text-destructive" : nil) do |marker| %>

@@ -4,15 +4,15 @@ class LoansTool < ApplicationTool
 
   description "List loans with filters (customer, amount range, interest rate range, start date range) and a summary " \
               "(count, total exposure, average, min, max) over the whole filtered set."
-  param :customer_id, required: false
-  param :min_amount, type: :number, required: false
-  param :max_amount, type: :number, required: false
-  param :min_rate, type: :number, desc: "Interest rate percent", required: false
-  param :max_rate, type: :number, required: false
-  param :from, desc: "Start date lower bound, ISO date", required: false
-  param :to, desc: "Start date upper bound, ISO date", required: false
-  param :order, desc: "newest (default) | oldest | largest | smallest | highest_rate | lowest_rate", required: false
-  param :limit, type: :integer, desc: "Rows to return, default 25, max 200", required: false
+  parameter :customer_id, required: false
+  parameter :min_amount, type: :number, required: false
+  parameter :max_amount, type: :number, required: false
+  parameter :min_rate, type: :number, description: "Interest rate percent", required: false
+  parameter :max_rate, type: :number, required: false
+  parameter :from, description: "Start date lower bound, ISO date", required: false
+  parameter :to, description: "Start date upper bound, ISO date", required: false
+  parameter :order, description: "newest (default) | oldest | largest | smallest | highest_rate | lowest_rate", required: false
+  parameter :limit, type: :integer, description: "Rows to return, default 25, max 200", required: false
 
   def execute(customer_id: nil, min_amount: nil, max_amount: nil, min_rate: nil, max_rate: nil, from: nil, to: nil, order: nil, limit: nil)
     scope = Loan.all

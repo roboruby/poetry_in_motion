@@ -35,10 +35,11 @@ class Message < ApplicationRecord
     user? && content.to_s.start_with?(ACTION_PREFIX)
   end
 
-  # An assistant row that has neither text nor tool calls yet: the agent is
-  # still working on it (or it failed and is about to be destroyed).
+  # An assistant row that has neither text nor tool calls nor a finish
+  # reason yet: the agent is still working on it (or it failed and is about
+  # to be destroyed).
   def pending?
-    assistant? && content.blank? && output_tokens.nil? && tool_calls.none?
+    assistant? && content.blank? && finish_reason.nil? && !tool_call?
   end
 
   # Assistant text rendered as HTML (CommonMark, no raw HTML pass-through).

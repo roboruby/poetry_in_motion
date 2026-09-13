@@ -4,15 +4,15 @@ class TransactionsTool < ApplicationTool
 
   description "List transactions with filters (customer, account, merchant, date range, amount range) and a summary " \
               "(count, total, average, min, max) over the whole filtered set. Use aggregate for charts and breakdowns."
-  param :customer_id, required: false
-  param :account_id, required: false
-  param :merchant_id, required: false
-  param :from, desc: "ISO date, inclusive", required: false
-  param :to, desc: "ISO date, inclusive", required: false
-  param :min_amount, type: :number, required: false
-  param :max_amount, type: :number, required: false
-  param :order, desc: "newest (default) | oldest | largest | smallest", required: false
-  param :limit, type: :integer, desc: "Rows to return, default 25, max 200", required: false
+  parameter :customer_id, required: false
+  parameter :account_id, required: false
+  parameter :merchant_id, required: false
+  parameter :from, description: "ISO date, inclusive", required: false
+  parameter :to, description: "ISO date, inclusive", required: false
+  parameter :min_amount, type: :number, required: false
+  parameter :max_amount, type: :number, required: false
+  parameter :order, description: "newest (default) | oldest | largest | smallest", required: false
+  parameter :limit, type: :integer, description: "Rows to return, default 25, max 200", required: false
 
   def execute(customer_id: nil, account_id: nil, merchant_id: nil, from: nil, to: nil, min_amount: nil, max_amount: nil, order: nil, limit: nil)
     scope = Transaction.all

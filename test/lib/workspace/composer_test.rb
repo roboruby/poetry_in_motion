@@ -76,8 +76,8 @@ class Workspace::ComposerReferencesTest < ActiveSupport::TestCase
   test "data references copy a tool's latest result into the model" do
     chat = Analyst.start
     call_message = chat.messages.create!(role: "assistant", content: "")
-    tool_call = call_message.tool_calls.create!(tool_call_id: "call_1", name: "merchants", arguments: { "limit" => 2 })
-    chat.messages.create!(role: "tool", content: { returned: 1, rows: [ { name: "Babbage Books", volume: 420.0 } ] }.to_json, parent_tool_call: tool_call)
+    tool_call = call_message.ruby_llm_tool_calls.create!(tool_call_id: "call_1", name: "merchants", arguments: { "limit" => 2 })
+    chat.messages.create!(role: "tool", content: { returned: 1, rows: [ { name: "Babbage Books", volume: 420.0 } ] }.to_json, ruby_llm_parent_tool_call: tool_call)
 
     result = Workspace::Composer.new(chat).render(
       surface_id: "top-merchants", title: "Top merchants",

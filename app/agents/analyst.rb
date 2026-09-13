@@ -20,9 +20,9 @@ class Analyst
   def self.prepare(chat)
     chat.assume_model_exists = true
     chat.with_tools(*tools_for(chat))
-    chat.with_runtime_instructions(instructions)
+    chat.with_instructions(instructions, persist: false)
     chat.with_headers("HTTP-Referer" => "https://poetryui.com", "X-Title" => "Poetry in Motion")
-    chat.with_params(max_tokens: MAX_OUTPUT_TOKENS)
+    chat.with_max_output_tokens(MAX_OUTPUT_TOKENS)
     chat
   end
 

@@ -27,7 +27,9 @@ into `tmp/banking/` and copies all seven tables into the app database with the d
 1,000,000 transactions. Re-run with `FORCE=1` to reimport; `bin/rails banking:stats` prints the
 counts. If the bundled archive is ever removed, the task falls back to Kaggle's public download.
 
-The model comes from [OpenRouter](https://openrouter.ai). `OPENROUTER_API_KEY` is read from `.env`
+The analyst runs on RubyLLM 2.0.0.rc2, the 2.0 release candidate; the persisted chats came through
+the 1.16 to 2.0 upgrade migrations in place. The model comes from [OpenRouter](https://openrouter.ai).
+`OPENROUTER_API_KEY` is read from `.env`
 in development and test (dotenv) or from the environment. `POETRY_IN_MOTION_MODEL` picks any
 OpenRouter model with tool calling; the default is `anthropic/claude-opus-5`. Without a key the
 app runs, shows the workspaces, and tells you in the chat panel that the analyst cannot answer.
@@ -95,9 +97,9 @@ fetched; the composer copies the result in before validating.
 created and morphed in place while the assistant writes, through poetry-agent's versioned
 `vreplace` stream action, so a late frame never repaints a settled row. `ChatResponseJob` runs the
 turn; `Workspace::Streamer` owns every broadcast. When the provider fails mid-stream or a tool
-call's JSON is cut off before it closes (OpenRouter reports the reason in the last chunk; the
-guard in `config/initializers/ruby_llm_stream_guard.rb` reads it), the job retries the turn twice,
-telling the model to send a smaller surface when its own output size was the cause.
+call's JSON is cut off before it closes (RubyLLM raises a `ToolCallParseError` that carries the
+finish reason), the job retries the turn twice, telling the model to send a smaller surface when
+its own output size was the cause.
 
 **Two-way surfaces.** A `Button` with an agent event posts to `SurfaceActionsController`: the
 bound inputs are written into the surface's data model (and the event log), the event becomes a
@@ -120,7 +122,7 @@ app/models/{chat,message,ui_event} the conversation and the surface event log
 app/views/chats/_dock.html.erb     the chat panel
 app/views/surfaces/                tiles and A2UI surfaces
 app/javascript/controllers/        workspace (dock states) and composer
-config/initializers/ruby_llm*.rb   RubyLLM configuration and the stream guard
+config/initializers/ruby_llm.rb    RubyLLM configuration
 db/data/                           the dataset archive and its license note
 ```
 

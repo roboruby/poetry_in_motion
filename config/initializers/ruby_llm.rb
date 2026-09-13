@@ -9,7 +9,4 @@ RubyLLM.configure do |config|
   config.openai_use_system_role = true
   config.request_timeout = 180
   config.logger = Rails.logger
-
-  # Use the association-based acts_as API (recommended)
-  config.use_new_acts_as = true
 end

@@ -12,7 +12,7 @@
   <% elsif message.assistant? %>
     <% if message.tool_calls.any? %>
       <div class="flex flex-col gap-1">
-        <% message.tool_calls.each do |tool_call| %>
+        <% message.tool_calls.each_value do |tool_call| %>
           <%= poetry_marker do |marker| %>
             <% marker.with_icon(name: :"wand-sparkles") %>
             <%= tool_call_label(tool_call) %>

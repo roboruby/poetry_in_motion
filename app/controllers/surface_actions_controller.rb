@@ -16,7 +16,7 @@ class SurfaceActionsController < ApplicationController
     if action.valid?
       persist_values(surface, payload["values"] || {})
       event = action.to_h["action"]
-      @chat.create_user_message("#{Message::ACTION_PREFIX} #{event["name"]} on #{surface_id}: #{event["context"].to_json}")
+      @chat.add_message(role: :user, content: "#{Message::ACTION_PREFIX} #{event["name"]} on #{surface_id}: #{event["context"].to_json}")
       ChatResponseJob.perform_later(@chat.id)
       render body: surface_stream(surface), content_type: "text/vnd.turbo-stream.html"
     else

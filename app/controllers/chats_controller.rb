@@ -11,7 +11,7 @@ class ChatsController < ApplicationController
     prompt = params[:prompt].to_s.strip
     if prompt.present?
       chat.update!(title: prompt.truncate(60))
-      chat.create_user_message(prompt)
+      chat.add_message(role: :user, content: prompt)
       ChatResponseJob.perform_later(chat.id)
     end
     redirect_to chat
@@ -19,7 +19,7 @@ class ChatsController < ApplicationController
 
   def show
     @tiles = @chat.tiles
-    @messages = @chat.messages.visible.includes(:tool_calls, :parent_tool_call)
+    @messages = @chat.messages.visible.includes(:ruby_llm_tool_calls, :ruby_llm_parent_tool_call)
   end
 
   def destroy

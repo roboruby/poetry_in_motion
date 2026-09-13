@@ -107,7 +107,8 @@ module Workspace
     private
 
     def latest_tool_result(tool_name)
-      message = chat.messages.joins(:parent_tool_call).where(role: "tool", tool_calls: { name: tool_name }).order(:id).last
+      message = chat.messages.joins(:ruby_llm_parent_tool_call)
+                    .where(role: "tool", ruby_llm_tool_calls: { name: tool_name }).order(:id).last
       return nil unless message
 
       result = JSON.parse(message.content.to_s)

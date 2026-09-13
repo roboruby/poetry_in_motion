@@ -1,12 +1,12 @@
 class MerchantsTool < ApplicationTool
   description "Merchants with their transaction count and volume, ranked by volume (default) or count; " \
               "filter by name fragment, city, and a transaction date window."
-  param :query, desc: "Merchant name fragment", required: false
-  param :city, required: false
-  param :from, desc: "ISO date; counts only transactions from this date", required: false
-  param :to, desc: "ISO date", required: false
-  param :order, desc: "volume (default) | count | name", required: false
-  param :limit, type: :integer, desc: "Rows to return, default 10, max 100", required: false
+  parameter :query, description: "Merchant name fragment", required: false
+  parameter :city, required: false
+  parameter :from, description: "ISO date; counts only transactions from this date", required: false
+  parameter :to, description: "ISO date", required: false
+  parameter :order, description: "volume (default) | count | name", required: false
+  parameter :limit, type: :integer, description: "Rows to return, default 10, max 100", required: false
 
   def execute(query: nil, city: nil, from: nil, to: nil, order: nil, limit: nil)
     scope = Merchant.left_joins(:transactions)

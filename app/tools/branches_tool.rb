@@ -1,10 +1,10 @@
 class BranchesTool < ApplicationTool
   description "List bank branches with their managers; filter by name fragment, city, or country. " \
               "Branches are reference data: the dataset links no accounts or customers to them."
-  param :query, desc: "Branch or manager name fragment", required: false
-  param :city, required: false
-  param :country, required: false
-  param :limit, type: :integer, desc: "Rows to return, default 25, max 200", required: false
+  parameter :query, description: "Branch or manager name fragment", required: false
+  parameter :city, required: false
+  parameter :country, required: false
+  parameter :limit, type: :integer, description: "Rows to return, default 25, max 200", required: false
 
   def execute(query: nil, city: nil, country: nil, limit: nil)
     scope = Branch.order(:branch_name)

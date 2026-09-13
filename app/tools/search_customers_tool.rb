@@ -6,13 +6,13 @@ class SearchCustomersTool < ApplicationTool
 
   description "Find customers by name or email fragment, city, credit band, or credit score range. " \
               "Returns up to 100 customers with their account count and total balance, plus the total match count."
-  param :query, desc: "Name or email fragment", required: false
-  param :city, desc: "Exact city name", required: false
-  param :credit_band, desc: "Excellent | Good | Fair | Poor | Very poor", required: false
-  param :min_credit_score, type: :integer, required: false
-  param :max_credit_score, type: :integer, required: false
-  param :order, desc: "credit_score_desc (default) | credit_score_asc | newest | oldest | name", required: false
-  param :limit, type: :integer, desc: "Rows to return, default 20, max 100", required: false
+  parameter :query, description: "Name or email fragment", required: false
+  parameter :city, description: "Exact city name", required: false
+  parameter :credit_band, description: "Excellent | Good | Fair | Poor | Very poor", required: false
+  parameter :min_credit_score, type: :integer, required: false
+  parameter :max_credit_score, type: :integer, required: false
+  parameter :order, description: "credit_score_desc (default) | credit_score_asc | newest | oldest | name", required: false
+  parameter :limit, type: :integer, description: "Rows to return, default 20, max 100", required: false
 
   def execute(query: nil, city: nil, credit_band: nil, min_credit_score: nil, max_credit_score: nil, order: nil, limit: nil)
     scope = Customer.all

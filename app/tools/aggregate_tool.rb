@@ -51,19 +51,19 @@ class AggregateTool < ApplicationTool
               "customer since, loan start, card expiry). Filters: from/to on that date, account_type, card_type, city (customer city), " \
               "credit_band, merchant_id (transaction metrics), customer_id, account_id. " \
               "Example: one merchant's monthly trend is transaction_volume by month with merchant_id."
-  param :metric, desc: "One of the metrics listed in the description", required: true
-  param :group_by, desc: "One of the groupings listed in the description; none returns a single total", required: false
-  param :from, desc: "ISO date lower bound on the base date", required: false
-  param :to, desc: "ISO date upper bound on the base date", required: false
-  param :account_type, desc: "Business | Checking | Savings", required: false
-  param :card_type, desc: "Credit | Debit", required: false
-  param :city, desc: "Customer city", required: false
-  param :credit_band, desc: "Excellent | Good | Fair | Poor | Very poor", required: false
-  param :merchant_id, desc: "Restrict transaction metrics to one merchant", required: false
-  param :customer_id, desc: "Restrict to one customer", required: false
-  param :account_id, desc: "Restrict transaction, card, or account metrics to one account", required: false
-  param :order, desc: "value_desc (default for categories) | value_asc | key_asc (default for month/year) | key_desc", required: false
-  param :limit, type: :integer, desc: "Groups to return, default 12, max 100", required: false
+  parameter :metric, description: "One of the metrics listed in the description", required: true
+  parameter :group_by, description: "One of the groupings listed in the description; none returns a single total", required: false
+  parameter :from, description: "ISO date lower bound on the base date", required: false
+  parameter :to, description: "ISO date upper bound on the base date", required: false
+  parameter :account_type, description: "Business | Checking | Savings", required: false
+  parameter :card_type, description: "Credit | Debit", required: false
+  parameter :city, description: "Customer city", required: false
+  parameter :credit_band, description: "Excellent | Good | Fair | Poor | Very poor", required: false
+  parameter :merchant_id, description: "Restrict transaction metrics to one merchant", required: false
+  parameter :customer_id, description: "Restrict to one customer", required: false
+  parameter :account_id, description: "Restrict transaction, card, or account metrics to one account", required: false
+  parameter :order, description: "value_desc (default for categories) | value_asc | key_asc (default for month/year) | key_desc", required: false
+  parameter :limit, type: :integer, description: "Groups to return, default 12, max 100", required: false
 
   def execute(metric:, group_by: nil, from: nil, to: nil, account_type: nil, card_type: nil, city: nil, credit_band: nil,
               merchant_id: nil, customer_id: nil, account_id: nil, order: nil, limit: nil)

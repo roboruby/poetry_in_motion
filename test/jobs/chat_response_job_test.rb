@@ -11,14 +11,14 @@ class ChatResponseJobTest < ActiveJob::TestCase
     lambda do |&block|
       row = chat.messages.create!(role: "assistant", content: "")
       text.split(" ").each { |word| block.call(Chunk.new("#{word} ", nil)) }
-      row.update!(content: text, output_tokens: 3)
+      row.update!(content: text, finish_reason: "stop")
       row
     end
   end
 
   test "streams the assistant's text into its row and settles it" do
     chat = Analyst.start
-    chat.create_user_message("Hello")
+    chat.add_message(role: :user, content: "Hello")
 
     streams = capture_turbo_stream_broadcasts(chat) do
       Chat.stub(:find, chat) do
@@ -35,11 +35,11 @@ class ChatResponseJobTest < ActiveJob::TestCase
 
   test "a provider error surfaces in the chat after the retries" do
     chat = Analyst.start
-    chat.create_user_message("Hello")
+    chat.add_message(role: :user, content: "Hello")
     attempts = 0
     failing = lambda do |&_block|
       attempts += 1
-      raise RubyLLM::ServerError.new(nil, "upstream down")
+      raise RubyLLM::ServerError, "upstream down"
     end
 
     streams = capture_turbo_stream_broadcasts(chat) do
@@ -53,13 +53,13 @@ class ChatResponseJobTest < ActiveJob::TestCase
 
   test "a cut-off tool call is retried with a note and the placeholder is removed" do
     chat = Analyst.start
-    chat.create_user_message("Hello")
+    chat.add_message(role: :user, content: "Hello")
     attempts = 0
     flaky = lambda do |&block|
       attempts += 1
       if attempts == 1
         chat.messages.create!(role: "assistant", content: "")
-        raise Workspace::StreamCutOff.new(nil, "cut", finish_reason: "length", tool_name: "render_surface", bytes: 4058)
+        raise RubyLLM::ToolCallParseError.new("cut", finish_reason: :max_tokens)
       end
       completion_writing(chat, "Second time works").call(&block)
     end

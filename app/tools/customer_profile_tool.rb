@@ -1,7 +1,7 @@
 class CustomerProfileTool < ApplicationTool
   description "Everything about one customer: profile, accounts with balances and cards, loans, " \
               "the ten most recent transactions, and totals. Needs the customer id (CUS...)."
-  param :customer_id, desc: "Customer id such as CUS000MKX5RHTAP", required: true
+  parameter :customer_id, description: "Customer id such as CUS000MKX5RHTAP", required: true
 
   def execute(customer_id:)
     customer = Customer.includes(accounts: :cards).find_by(id: customer_id.to_s.strip.upcase)

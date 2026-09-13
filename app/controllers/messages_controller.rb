@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
     content = params.dig(:message, :content).to_s.strip
     if content.present?
       @chat.update!(title: content.truncate(60)) if @chat.title.blank?
-      @chat.create_user_message(content)
+      @chat.add_message(role: :user, content: content)
       ChatResponseJob.perform_later(@chat.id)
     end
 

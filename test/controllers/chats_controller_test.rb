@@ -20,6 +20,15 @@ class ChatsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Overview please", chat.display_title
   end
 
+test "show tells you to add the model key when the analyst is not configured" do
+  require "minitest/mock"
+  chat = Analyst.start
+  Analyst.stub(:configured?, false) { get chat_path(chat) }
+  assert_response :success
+  assert_select "[data-slot=alert-title]", text: "No model key"
+  assert_select "[data-slot=alert]", text: /Put OPENROUTER_API_KEY in \.env/
+end
+
   test "show renders the hero state on an empty workspace and docks once surfaces exist" do
     chat = Analyst.start
     get chat_path(chat)

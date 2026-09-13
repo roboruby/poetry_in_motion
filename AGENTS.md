@@ -29,7 +29,7 @@ README.md explains the architecture; this file carries the rules.
 ## Gates
 
 - `bin/rails test` (fixtures only; no dataset, no network) and `bin/ci`
-  (RuboCop omakase, Brakeman with `config/brakeman.ignore`, audits).
+  (RuboCop omakase, Brakeman with `config/brakeman.ignore`, audits, `poetry:check`).
 - Live turns need `OPENROUTER_API_KEY` in `.env`; tests set a dummy key.
 
 ## Conventions

@@ -1,10 +1,11 @@
 @import "tailwindcss";
-@import "./poetry/tokens.css";
+@import "./poetry/tokens.css" layer(theme);
 @import "./poetry/theme.css";
 @import "./poetry/animate.css";
 @import "./poetry/utilities.css";
 @import "./poetry/aliases.css";
 @import "./poetry/style-default.css" layer(base);
+@import "./poetry/agent.css" layer(base);
 @import "./poetry/base.css";
 @import "./poetry/typeset.css";
 @source "./poetry/safelist.txt";

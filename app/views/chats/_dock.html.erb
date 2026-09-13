@@ -39,7 +39,7 @@
     <div class="px-4 pb-2">
       <%= poetry_alert(variant: :destructive) do |alert| %>
         <% alert.with_title { "No model key" } %>
-        <% alert.with_description { "Put OPENROUTER_API_KEY in .env (see .env.example) and restart the server; the analyst cannot answer until then." } %>
+        Put OPENROUTER_API_KEY in .env (see .env.example) and restart the server; the analyst cannot answer until then.
       <% end %>
     </div>
   <% end %>

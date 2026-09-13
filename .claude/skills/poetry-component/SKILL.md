@@ -47,6 +47,31 @@ surface.
   published family's base) and lives in its own `app/components`
   namespace. Never copy a poetry component's source into the app to
   modify it - subclass it, or compose it in a template.
+- An app or engine component names its view helper with `helper :name`
+  (a distinctive name; keywords + content block, like every poetry
+  helper). That one declaration makes it first-class: the helper is
+  defined at boot and on reload, `poetry:check` lints it under that name
+  with its own contract, llms.txt and the generated skill list it. Run
+  `bin/rails poetry:registry` and commit the file so the MCP server (which
+  never boots the app) describes and checks it too; `poetry:verify` fails
+  when that file is stale.
+- A controller of the app's own that a component wires joins the
+  controllers manifest with `bin/rails poetry:stimulus:manifest` (commit
+  the file). Then `use_stimulus` validates it by Symbol at class load,
+  `poetry:check` validates its wiring in templates, and the registry
+  carries its API. Write the controller with literal statics (`static
+  targets = [...]`, `static values = {...}`, `static events = [...]` for
+  the events it dispatches); a parent that is another app controller or a
+  poetry controller is merged, a library parent (or a computed static) is
+  skipped and named - add that entry by hand in the same file; regeneration
+  keeps it. Generate the manifest before declaring the controller by
+  Symbol; a controller that dispatches events without `static events`
+  leaves its events unvalidated, never wrong.
+- A dictionary of your own uses names of your own: prefix its `cn-*`
+  classes with the kit (`cn-acme-pill`), never a name a Poetry dictionary
+  emits, so the override audit reads your rules as yours and a future
+  theme name cannot collide with them. Reusing a theme class as a base is
+  fine; writing CSS against it is an override and must be declared.
 - Inner classes that exist only to serve a family (item builders,
   internal wrappers) declare `internal_component!` so the registry and
   every surface derived from it skip them.

@@ -255,16 +255,16 @@ module Workspace
       end
     end
 
-# The basic catalog renders a date input without a visible label; a
-# console needs the label, so the control gets Poetry's Field around it.
-def render_date_time_input(component, scope, renderer)
-  control = super
-  label = renderer.text(component["label"], scope)
-  return control if label.empty?
+    # The basic catalog renders a date input without a visible label; a
+    # console needs the label, so the control gets Poetry's Field around it.
+    def render_date_time_input(component, scope, renderer)
+      control = super
+      label = renderer.text(component["label"], scope)
+      return control if label.empty?
 
-  renderer.component(Poetry::Ui::Field::Component,
-                     { id: renderer.control_id(component, scope), label_text: label }, suffix: "field") { control }
-end
+      renderer.component(Poetry::Ui::Field::Component,
+                        { id: renderer.control_id(component, scope), label_text: label }, suffix: "field") { control }
+    end
 
     def render_empty(component, scope, renderer)
       title = renderer.text(component["title"], scope)

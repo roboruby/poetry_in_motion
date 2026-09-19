@@ -60,7 +60,7 @@ gem "poetry", ">= 0.1.0"
 gem "poetry-charts", ">= 0.1.0"
 gem "poetry-agent", ">= 0.1.0"
 
-gem "ruby_llm", "2.0.0.rc2"
+gem "ruby_llm", "2.0.0.rc4"
 gem "commonmarker", "~> 2.10"
 
 gem "dotenv-rails", "~> 3.2", groups: [ :development, :test ]

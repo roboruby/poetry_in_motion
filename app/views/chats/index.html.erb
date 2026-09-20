@@ -22,10 +22,10 @@
       <% end %>
       <%= poetry_table_body do %>
         <% @chats.each do |chat| %>
-          <%= poetry_table_row do %>
-            <%= poetry_table_cell { link_to chat.display_title, chat, class: "font-medium hover:underline" } %>
-            <%= poetry_table_cell(class: "text-right tabular-nums") { chat.surface_ids.size.to_s } %>
-            <%= poetry_table_cell(class: "text-right text-muted-foreground") { "#{time_ago_in_words(chat.updated_at)} ago" } %>
+          <%= poetry_table_row(id: dom_id(chat)) do %>
+            <%= poetry_table_cell(id: dom_id(chat, :title)) { link_to chat.display_title, chat, class: "font-medium hover:underline" } %>
+            <%= poetry_table_cell(id: dom_id(chat, :surfaces), class: "text-right tabular-nums") { chat.surface_ids.size.to_s } %>
+            <%= poetry_table_cell(id: dom_id(chat, :updated), class: "text-right text-muted-foreground") { "#{time_ago_in_words(chat.updated_at)} ago" } %>
           <% end %>
         <% end %>
       <% end %>

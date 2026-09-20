@@ -3,11 +3,11 @@ require "test_helper"
 class ChatsControllerTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
-  test "index lists workspaces" do
-    Analyst.start(title: "Loans review")
+  test "index lists workspaces in rows keyed by the record" do
+    chat = Analyst.start(title: "Loans review")
     get root_path
     assert_response :success
-    assert_select "a", text: "Loans review"
+    assert_select "tr#chat_#{chat.id} a", text: "Loans review"
   end
 
   test "create opens a workspace and asks the first question" do

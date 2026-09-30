@@ -717,6 +717,9 @@ data-[variant=image]:group-data-[upload-state=done]/attachment:opacity-100
 data-[variant=image]:group-data-[upload-state=idle]/attachment:opacity-100
 data-[variant=image]:opacity-60
 data-active:bg-background
+data-active:bg-muted/50
+data-active:focus:bg-muted
+data-active:hover:bg-muted
 data-active:text-foreground
 data-autoscrolling:scrollbar-none
 data-closed:overflow-hidden

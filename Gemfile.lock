@@ -83,7 +83,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.26.0)
       msgpack (~> 1.5)
-    brakeman (8.0.6)
+    brakeman (8.1.0)
       racc
     builder (3.3.0)
     bundler-audit (0.9.3)
@@ -213,23 +213,23 @@ GEM
     parser (3.3.12.0)
       ast (~> 2.4.1)
       racc
-    poetry (0.1.9)
-      poetry-core (= 0.1.9)
-      poetry-lucide (= 0.1.9)
-      poetry-ui (= 0.1.9)
-    poetry-agent (0.1.9)
-      poetry-core (= 0.1.9)
-    poetry-charts (0.1.9)
-      poetry-core (= 0.1.9)
-    poetry-core (0.1.9)
+    poetry (0.1.10)
+      poetry-core (= 0.1.10)
+      poetry-lucide (= 0.1.10)
+      poetry-ui (= 0.1.10)
+    poetry-agent (0.1.10)
+      poetry-core (= 0.1.10)
+    poetry-charts (0.1.10)
+      poetry-core (= 0.1.10)
+    poetry-core (0.1.10)
       rails (~> 8.0)
       tailwind_merge (~> 1.3)
       view_component (~> 4.0)
       zeitwerk (~> 2.6)
-    poetry-lucide (0.1.9)
-      poetry-core (= 0.1.9)
-    poetry-ui (0.1.9)
-      poetry-core (= 0.1.9)
+    poetry-lucide (0.1.10)
+      poetry-core (= 0.1.10)
+    poetry-ui (0.1.10)
+      poetry-core (= 0.1.10)
     pp (0.6.4)
       prettyprint
     prettyprint (0.2.0)
@@ -440,9 +440,9 @@ DEPENDENCIES
   herb
   importmap-rails
   minitest-mock (~> 5.27)
-  poetry (>= 0.1.9)
-  poetry-agent (>= 0.1.9)
-  poetry-charts (>= 0.1.9)
+  poetry (>= 0.1.10)
+  poetry-agent (>= 0.1.10)
+  poetry-charts (>= 0.1.10)
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.3, >= 8.1.3.1)
@@ -478,7 +478,7 @@ CHECKSUMS
   bigdecimal (4.1.3) sha256=61ebe1e5e559bdc3cc6f2c0ee7f427321fc838f59611c294356eb04d6e21cf66
   bindex (0.8.1) sha256=7b1ecc9dc539ed8bccfc8cb4d2732046227b09d6f37582ff12e50a5047ceb17e
   bootsnap (1.26.0) sha256=ca96237015e6cd74a02963d5821cf00ac5ea134653b323e8cd6d702a7718bf1b
-  brakeman (8.0.6) sha256=759cc69341115e6c2dcd47b6fd8649a0b9bd540e3585ac8a0a94e31c66fee386
+  brakeman (8.1.0) sha256=cfa9e5214e4925842f4bc849a64f8a7e6c5d0425fe98eac8d7b7bc60fdc17e07
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bundler (4.0.17) sha256=214e21431b5665dd2f99df8a5511c6b151d7a72e8015c8b38f8b775b61cbb6c1
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
@@ -550,12 +550,12 @@ CHECKSUMS
   nokogiri (1.19.4-x86_64-linux-musl) sha256=17dfb7c1fa194ae02fbf7c51a7afc8d278045ab3fdacfd86f91d02d7b274470b
   parallel (2.2.0) sha256=e1059c5fd7b649558a0aec38a769f06a42942bdb40503d005a59c352fe011cd8
   parser (3.3.12.0) sha256=21a6d7f755d5a24dfbdc6e6b772e4e879a52e7631a88bc5a3a134606052c9828
-  poetry (0.1.9) sha256=62a1fd54297af92334ed956742fa900f37683f53b526f7e14c9249379b404c8f
-  poetry-agent (0.1.9) sha256=3a33ef2492ef9c164f47c58e638cd75f6a84c0d01b658304db81a8573af36734
-  poetry-charts (0.1.9) sha256=66cc3267cda18b2409d818151a7d876903cad1a3e94a2a73e13f63941c55ddc4
-  poetry-core (0.1.9) sha256=9a542c72cd18f1e88ca401e7cd22fce89a296393ef4ed4556ea010d24518194e
-  poetry-lucide (0.1.9) sha256=65cd8bc8188df4c3bcca47a9a8e727b527154b7af75138139bd78659aee1f77c
-  poetry-ui (0.1.9) sha256=8bf9631704540cc79f1bafdd08fa9989911a9c5a7223c34c8312d1fb99df5dcf
+  poetry (0.1.10) sha256=924c58e6b783a0ad220937d7ad40f78146a4330a1327eb51fa35a743543fb39a
+  poetry-agent (0.1.10) sha256=375d463893ec150eb96570906948b37294e418b6b957073f1f31d8617f42e647
+  poetry-charts (0.1.10) sha256=692884ce1b4fb97a010128a51d94d224bf58b3f52373876f2d36613822044024
+  poetry-core (0.1.10) sha256=f774b04c26871452f69d068035cf3f6e91be4ee3e2e1c64e100a56e25f1500c5
+  poetry-lucide (0.1.10) sha256=434fc01b23b0a07b56a0448df6ea84893ea4321a0765736fa28ef2c7c5a5b8ab
+  poetry-ui (0.1.10) sha256=cbc5e1791f677cb87329b2c53be3c56b02aa1b36cac95b2c4020a299335ed758
   pp (0.6.4) sha256=dfcb0fce700c41456265922884f9fe195d7fbb0674a3578e6c0f69588e82b570
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85

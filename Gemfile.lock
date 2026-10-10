@@ -110,7 +110,7 @@ GEM
     concurrent-ruby (1.3.8)
     connection_pool (3.0.2)
     crass (1.0.7)
-    date (3.5.1)
+    date (3.6.0)
     debug (1.11.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
@@ -213,26 +213,26 @@ GEM
     parser (3.3.12.0)
       ast (~> 2.4.1)
       racc
-    poetry (0.1.11)
-      poetry-core (= 0.1.11)
-      poetry-lucide (= 0.1.11)
-      poetry-ui (= 0.1.11)
-    poetry-agent (0.1.11)
-      poetry-core (= 0.1.11)
-    poetry-charts (0.1.11)
-      poetry-core (= 0.1.11)
-    poetry-core (0.1.11)
+    poetry (0.1.12)
+      poetry-core (= 0.1.12)
+      poetry-lucide (= 0.1.12)
+      poetry-ui (= 0.1.12)
+    poetry-agent (0.1.12)
+      poetry-core (= 0.1.12)
+    poetry-charts (0.1.12)
+      poetry-core (= 0.1.12)
+    poetry-core (0.1.12)
       rails (~> 8.0)
       tailwind_merge (~> 1.3)
       view_component (~> 4.0)
       zeitwerk (~> 2.6)
-    poetry-lucide (0.1.11)
-      poetry-core (= 0.1.11)
-    poetry-ui (0.1.11)
-      poetry-core (= 0.1.11)
+    poetry-lucide (0.1.12)
+      poetry-core (= 0.1.12)
+    poetry-ui (0.1.12)
+      poetry-core (= 0.1.12)
     pp (0.6.4)
       prettyprint
-    prettyprint (0.2.0)
+    prettyprint (0.2.1)
     prism (1.9.0)
     propshaft (1.3.2)
       actionpack (>= 7.0.0)
@@ -396,7 +396,7 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
-    uri (1.1.1)
+    uri (1.1.2)
     useragent (0.16.11)
     view_component (4.15.0)
       actionview (>= 7.1.0)
@@ -492,7 +492,7 @@ CHECKSUMS
   concurrent-ruby (1.3.8) sha256=b2f1be836e968ccc78ccfce277ea79c72a88633f22306782c16ff23fb415d1e1
   connection_pool (3.0.2) sha256=33fff5ba71a12d2aa26cb72b1db8bba2a1a01823559fb01d29eb74c286e62e0a
   crass (1.0.7) sha256=94868719948664c89ddcaf0a37c65048413dfcb1c869470a5f7a7ceb5390b295
-  date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
+  date (3.6.0) sha256=18ac945c4e24ebd93534f8eab8c2fd8c5604b3e977105b3798d62a1e8d27b580
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   dotenv (3.2.0) sha256=e375b83121ea7ca4ce20f214740076129ab8514cd81378161f11c03853fe619d
   dotenv-rails (3.2.0) sha256=657e25554ba622ffc95d8c4f1670286510f47f2edda9f68293c3f661b303beab
@@ -548,14 +548,14 @@ CHECKSUMS
   nokogiri (1.19.4-x86_64-linux-musl) sha256=17dfb7c1fa194ae02fbf7c51a7afc8d278045ab3fdacfd86f91d02d7b274470b
   parallel (2.2.0) sha256=e1059c5fd7b649558a0aec38a769f06a42942bdb40503d005a59c352fe011cd8
   parser (3.3.12.0) sha256=21a6d7f755d5a24dfbdc6e6b772e4e879a52e7631a88bc5a3a134606052c9828
-  poetry (0.1.11) sha256=59f754e17d41f2b79d558b642ba66b62af34db00d829e329f3eaff669bc2c080
-  poetry-agent (0.1.11) sha256=03b0e0803e24b2210f9bfa1223d84095346075fe7809c8c5a8e18512a68c2afc
-  poetry-charts (0.1.11) sha256=4b317870cb0f8f8bfdbd28e750fd231505632c7092e7bb73728dd247a2288d2e
-  poetry-core (0.1.11) sha256=582915c85f81002a310c016c6fb311644f4fa1d223d54db1ac5c545a200c2de9
-  poetry-lucide (0.1.11) sha256=43847d68f7e0a3977ce2416d9e28e586f2eb51c2cb44279a34e07226f199d163
-  poetry-ui (0.1.11) sha256=9434de130ca956e3802613521fafdea930bef4ab34478917601148ae79045b8c
+  poetry (0.1.12) sha256=2c3d1ce8e0cd6d03962f4dd2a4d54c0878017a3b1d8d874319754b6009253cef
+  poetry-agent (0.1.12) sha256=eed917f4557dc36b1d2f8a78fe55d23bf2eba21bb39c23371733594a65329011
+  poetry-charts (0.1.12) sha256=7829457ff907ba7e11aeebd538657ad4435d491a35a05386ed92e422d30db3bd
+  poetry-core (0.1.12) sha256=b4063a15dc97b7fdac1be1fc9d74d0d98883b9c045c00a20308a8fda2fe45523
+  poetry-lucide (0.1.12) sha256=501a156df0523865aa05f4609436747c659f768a68bb5d1daffe30208548f7b5
+  poetry-ui (0.1.12) sha256=92b4d5c731c92ab143023bc36612f0192ac1c7110dd7838948eb00f3ffacd35a
   pp (0.6.4) sha256=dfcb0fce700c41456265922884f9fe195d7fbb0674a3578e6c0f69588e82b570
-  prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
+  prettyprint (0.2.1) sha256=d555d57ea6d7cf001d4774b693546a6bd88bec1e778ddffb5c60b68ceec4b7d4
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
   propshaft (1.3.2) sha256=1d56a3e56a92c21bfc29caf07406b5386b00d4c47ddf357cf989a5a234b1389e
   public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
@@ -618,7 +618,7 @@ CHECKSUMS
   tzinfo (2.0.6) sha256=8daf828cc77bcf7d63b0e3bdb6caa47e2272dcfaf4fbfe46f8c3a9df087a829b
   unicode-display_width (3.2.0) sha256=0cdd96b5681a5949cdbc2c55e7b420facae74c4aaf9a9815eee1087cb1853c42
   unicode-emoji (4.2.0) sha256=519e69150f75652e40bf736106cfbc8f0f73aa3fb6a65afe62fefa7f80b0f80f
-  uri (1.1.1) sha256=379fa58d27ffb1387eaada68c749d1426738bd0f654d812fcc07e7568f5c57c6
+  uri (1.1.2) sha256=89292e98eabbef6248b0a0ed5e7e398e152f83f17560023a6d94a7f492b169fb
   useragent (0.16.11) sha256=700e6413ad4bb954bb63547fa098dddf7b0ebe75b40cc6f93b8d54255b173844
   view_component (4.15.0) sha256=2924e207b102c04ab51c4d318535f03f1c3aab3c81ecff99b1cc631b43e14eac
   web-console (4.3.0) sha256=e13b71301cdfc2093f155b5aa3a622db80b4672d1f2f713119cc7ec7ac6a6da4
